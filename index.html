@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+  <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+    <title>A Primer for Web Performance Timing APIs</title>
+    <script class='remove'>
+      var respecConfig = {
+          specStatus: "unofficial",
+          shortName:  "perf-timing-primer",
+          editors: [
+            {
+              name:       "A list of contributors in GitHub",
+              url:        "https://github.com/w3c/somerepo"
+            }
+          ],
+          edDraftURI:   "TBD",
+          wg:           "Web Performance Working Group",
+          wgURI:        "http://www.w3.org/2010/webperf/",
+          wgPublicList: "public-web-perf",
+          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/45211/status"
+      };
+    </script>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common' class='remove' async></script>
+  </head>
+  <body>
+
+    <section id='abstract'>
+      <p>
+        This document describes the basic concepts of a various set of Web Performance Timeline related specifications, including [[PERFORMANCE-TIMELINE-2]], [[HR-TIME-2]], [[NAVIGATION-TIMING-2]], [[RESOURCE-TIMING]], [[USER-TIMING]], [[SERVER-TIMING]], and provide a clear idea how these APIs fit together.
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>
+        This document is a collaboration of the <a href="http://www.w3.org/2010/webperf/">W3C Web Performance Working Group</a>. Most use cases in this document are originated from the working group's past discussion <a href="https://lists.w3.org/Archives/Public/public-web-perf/">achieved</a> in their mailing list.
+      </p>
+    </section>
+
+    <section>
+      <h2>Overview</h2>
+      <p>
+        Image you're visiting the W3C website, if the web content doesn't show up in the screeen within a certain seconds, as users, you might just close the tab and head to alternatives, but as developers, you might wish to trace the hints in the requests and timing details so that you can find out what's slowing down the webpage.
+        </p>
+        <p>
+        Luckily, most browser vendors are willing to expose these performance characteristics via a set of performance APIs. With these convenient features, developers can better identify the bottlenecks of the web applications and serve the faster web applications.
+      </p>
+      <figure id="fig1">
+        <img alt="network data for w3.org" src="./images/w3-org-network-timing.png" class="graph" style="width: 70%">
+        <figcaption><span class="fig-title">A Waterfall Chart for w3.org</span></figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Resource Timing</h2>
+      <p><a href="#fig1">Fig.1</a> uses a waterfall chart to illustrate the detailed network timing data for each loaded resource, with the <a href="http://www.w3.org/TR/resource-timing">Resource Timing API</a>.</p>
+      <figure id="fig2">
+      <img style="width:85%" src="./images/resource-timing-overview-1.png" alt="Resource Timing attributes">
+      <figcaption><span class="fig-title">Resource Timing attributes</span></figcaption>
+      </figure>
+
+      <section>
+        <h2>Load Times for Resources</h2>
+        <p>Web Applications are mostly consist by a set of downloadable resources. By resource, we usually mean the HTML elements, the XHR objects, and link with the link type of stylesheet or SVG elements.</p>
+        <p>The Resources timing data are exposed as methods on the global <code>window.performance</code> object we are going to talk about in the next section. You're encourage to use <code>performance.getEntriesByType("resource")</code> method to obtain an array of Resource Timing Objects for each requested resource.</p>
+      <figure id="fig3">
+        <img style="width:30%" src="./images/resource-timing-detail-w3-org.png" alt="Demo of Resource Timing Details">
+        <figcaption><span class="fig-title">Demo of Resource Timing Details</span></figcaption>
+      </figure>
+      <p>Here, the <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The duration attribute in Resource Timing can by measured as the difference between responseEnd and startTime.</p>
+      <p>As indicated in <a href="#fig2">Fig.2</a> and <a href="#fig3">Fig.3</a>, you are able to access a set of critical network timing information for each resource on the page: 
+      <dl>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-workerStart">workerStart</a></code></dt><dd>If the current browsing or worker context's have an active worker, or if the worker is available.</dd>
+        <dt><code><a href="http://www.w3.org/TR/#widl-PerformanceResourceTiming-redirectStart">redirectStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-redirectEnd">redirectEnd</a></code></dt><dd>If there are HTTP redirects or equivalent when fetching the resource and if all the redirects or equivalent are from the same origin as the current document.</dd>
+        <dt><code><a href="http://www.w3.org/TR//resource-timing/#widl-PerformanceResourceTiming-fetchStart">fetchStart</a></code></dt><dd>If there are no HTTP redirects or equivalent.</dd>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-domainLookupStart">domainLookupStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-domainLookupEnd">domainLookupEnd</a></code></dt>
+        <dd>The time before / immediately after the user agent finishes the domain name lookup for the resource.</dd>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-connectStart">connectStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-connectEnd">connectEnd</a></code></dt>
+        <dd>The time immediately before the user agent starts / finishes establishing the connection to the server to retrieve the resource.</dd>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-secureConnectionStart">secureConnectionStart</a></code></dt><dd></dd>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-requestStart">requestStart</a></code></dt>
+        <dd>The time immediately before the user agent starts requesting the resource from the server, or from relevant application caches or from local resources.</dd>
+        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-responseStart">responseStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-responseEnd">responseEnd</a></code></dt><dd></dd>
+      </dl>
+      </p>
+      <p>Each of these time stamp is in microseconds, as defined by the <code>window.performance.now()</code> method in the<a href="http://www.w3.org/TR/hr-time/#sec-high-resolution-time">High ResolutionTime specification</a>.</p>
+      </section>
+
+      <section>
+        <h2>Example</h2>
+        <p>As an example, let try to measure the time it takes to fetch the icon on the W3C homepage.</p>
+        <pre class="example highlight prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span><span class="pln">
+</span><span class="tag">&lt;html&gt;</span><span class="pln">
+  </span><span class="tag">&lt;head&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/head&gt;</span><span class="pln">
+  </span><span class="tag">&lt;body</span><span class="pln"> </span><span class="atn">onload</span><span class="pun">=</span><span class="atv">"</span><span class="pln">loadResources</span><span class="pun">()</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;script&gt;</span><span class="pln">
+       </span><span class="kwd">function</span><span class="pln"> loadResources</span><span class="pun">()</span><span class="pln">
+       </span><span class="pun">{</span><span class="pln">
+          </span><span class="kwd">var</span><span class="pln"> image1 </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Image</span><span class="pun">();</span><span class="pln">
+          image1</span><span class="pun">.</span><span class="pln">onload </span><span class="pun">=</span><span class="pln"> resourceTiming</span><span class="pun">;</span><span class="pln">
+          image1</span><span class="pun">.</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> </span><span class="str">'http://www.w3.org/Icons/w3c_main.png'</span><span class="pun">;</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+
+       </span><span class="kwd">function</span><span class="pln"> resourceTiming</span><span class="pun">()</span><span class="pln">
+       </span><span class="pun">{</span><span class="pln">
+           </span><span class="kwd">var</span><span class="pln"> resourceList </span><span class="pun">=</span><span class="pln"> window</span><span class="pun">.</span><span class="pln">performance</span><span class="pun">.</span><span class="pln">getEntriesByType</span><span class="pun">(</span><span class="str">"resource"</span><span class="pun">);</span><span class="pln">
+           </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="pln">i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> resourceList</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
+           </span><span class="pun">{</span><span class="pln">
+              </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">initiatorType </span><span class="pun">==</span><span class="pln"> </span><span class="str">"img"</span><span class="pun">)</span><span class="pln">
+              </span><span class="pun">{</span><span class="pln">
+                 alert</span><span class="pun">(</span><span class="str">"End to end resource fetch: "</span><span class="pun">+</span><span class="pln"> resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">responseEnd </span><span class="pun">-</span><span class="pln"> resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">startTime</span><span class="pun">);</span><span class="pln">
+              </span><span class="pun">}</span><span class="pln">
+           </span><span class="pun">}</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+    </span><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"image0"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"http://www.w3.org/Icons/w3c_home.png"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/body&gt;</span><span class="pln">
+</span><span class="tag">&lt;/html&gt;</span></pre>
+      </section>
+    </section>
+
+    <section>
+      <h2>Performance Timeline</h2>
+      <section>
+        <h3>Overview</h3>
+        <p>As Navigation Timing, Resource Timing, and User Timing were gradually taking shape, the group decided to unified interface for these various timing specification that were basically doing the same thing with their own separate interfaces.
+        </p>
+        <p>This specification defines the necessary Performance Timeline primitives that enable web developers to access, instrument, and retrieve various performance metrics from the full lifecycle of a web application.</p>
+        <p>
+        A developer can obtain performance metrics related to the navigation of the document, resources on the page, and developer scripts via the the Performance Timeline:
+        </p>
+
+        <pre class="highlight example prettyprint prettyprinted" style="">
+        <span class="dec">&lt;!doctype html&gt;</span><span class="pln">
+</span><span class="tag">&lt;html&gt;</span><span class="pln">
+</span><span class="tag">&lt;head&gt;</span><span class="pln">
+</span><span class="tag">&lt;/head&gt;</span><span class="pln">
+</span><span class="tag">&lt;body</span><span class="pln"> </span><span class="atn">onload</span><span class="pun">=</span><span class="atv">"</span><span class="pln">init</span><span class="pun">()</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+</span><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"image0"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"http://www.w3.org/Icons/w3c_main.png"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+</span><span class="tag">&lt;script&gt;</span><span class="pln">
+   </span><span class="kwd">function</span><span class="pln"> init</span><span class="pun">()</span><span class="pln">
+   </span><span class="pun">{</span><span class="pln">
+        performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"startWork"</span><span class="pun">);</span><span class="pln"> </span><span class="com">// see [[User Timing]]</span><span class="pln">
+        doWork</span><span class="pun">();</span><span class="pln"> </span><span class="com">// Some developer code</span><span class="pln">
+        performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"endWork"</span><span class="pun">);</span><span class="pln">
+
+        measurePerf</span><span class="pun">();</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+
+   </span><span class="kwd">function</span><span class="pln"> measurePerf</span><span class="pun">()</span><span class="pln">
+   </span><span class="pun">{</span><span class="pln">
+       </span><span class="kwd">var</span><span class="pln"> perfEntries </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">getEntries</span><span class="pun">();</span><span class="pln">
+       </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> perfEntries</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
+       </span><span class="pun">{</span><span class="pln">
+             </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">window</span><span class="pun">.</span><span class="pln">console</span><span class="pun">)</span><span class="pln"> console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Name: "</span><span class="pln">        </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">name      </span><span class="pun">+</span><span class="pln">
+                                             </span><span class="str">" Entry Type: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">entryType </span><span class="pun">+</span><span class="pln">
+                                             </span><span class="str">" Start Time: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">startTime </span><span class="pun">+</span><span class="pln">
+                                             </span><span class="str">" Duration: "</span><span class="pln">   </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">duration  </span><span class="pun">+</span><span class="pln"> </span><span class="str">"\n"</span><span class="pun">);</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/script&gt;</span><span class="pln">
+</span><span class="tag">&lt;/body&gt;</span><span class="pln">
+</span><span class="tag">&lt;/html&gt;</span></pre>
+          </section>
+          <section>
+            <h3>EntryType</h3>
+            <p>The Performance TimeLine introduces PerformanceEntry.entryType to describes the type of the interface represented by this PerformanceEntry object, which represents performance measurements.</p>
+            <pre class='example highlight'>
+ var entryType = performance.getEntries()[0].entryType
+// Entry Type
+      </pre>
+      <p>Each of PerformanceEntry objects expose the following inherited attributes:
+        <dl>
+          <dt><code>name</code></dt>
+          <dd>A DOMString identifier for this PerformanceEntry object. Not necessarily unique.</dd>
+          <dt><code>entryType</code></dt>
+          <dd>The DOMString that describes the type of the interface represented by this PerformanceEntry object.</dd>
+          <dt><code>startTime</code></dt>
+          <dd>A DOMHighResTimeStamp that contains the time value of the first recorded timestamp of this performance metric..</dd>
+          <dt><code>duration</code></dt>
+          <dd>A DOMHighResTimeStamp that contains the time value of the duration of the entire event being recorded by this PerformanceEntry.</dd>
+        </dl>
+      </p>
+      <p>
+        The W3C WebPerf WG <a href="http://www.w3.org/wiki/Web_Performance/EntryType">maintains a list</a> of the known values for PerformanceEntry.entryType.
+      </p>
+      <table>
+        <tbody><tr><th>entryType value</th><th>Interface name</th><th>Specification</th><th>Remarks</th></tr>
+          <tr><td>"mark"</td><td>PerformanceMark</td><td><a rel="nofollow" class="external text" href="http://www.w3.org/TR/user-timing/">User Timing</a></td><td></td></tr>
+          <tr><td>"measure"</td><td>PerformanceMeasure</td><td><a rel="nofollow" class="external text" href="http://www.w3.org/TR/user-timing/">User Timing</a></td><td></td></tr>
+          <tr><td>"navigation"</td><td>PerformanceNavigationTiming</td><td><a rel="nofollow" class="external text" href="http://www.w3.org/TR/navigation-timing-2/">Navigation Timing 2</a></td><td>work in progress</td></tr>
+          <tr><td>"frame"</td><td>PerformanceFrameTiming</td><td><a rel="nofollow" class="external text" href="http://w3c.github.io/frame-timing/">Frame Timing</a></td><td>work in progress</td></tr>
+          <tr><td>"resource"</td><td>PerformanceResourceTiming</td><td><a rel="nofollow" class="external text" href="http://www.w3.org/TR/resource-timing/">Resource Timing</a></td><td>work in progress</td></tr>
+          <tr><td>"server"</td><td>PerformanceServerTiming</td><td><a rel="nofollow" class="external text" href="http://w3c.github.io/server-timing/">Server Timing</a></td><td>work in progress</td></tr>
+        </tbody></table>
+      </section>
+      <section>
+        <h3>Observer</h3>
+        <p>Resource and user timings has been useful by provide performance data, but in some occations it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
+        <p>In Performace Timeline Level 2, the <code>PerformanceObserver interface</code> is introduced to allow subscribing to / observing new performance events delivered into the Performance Timeline.</p>
+        <p>Here's an <a href="http://output.jsbin.com/xodibo/latest/quiet">early example</a> of Performance Observer:</p>
+        <pre class='example highlight'>    
+          var observer = new PerformanceObserver(function(list) {      
+            list.getEntries().map(entry =&gt; {
+              var pre = document.createElement('pre')
+              pre.innerText = JSON.stringify(obj(entry), null, '\t');
+              document.getElementById('observe').appendChild(pre);
+            })
+          });
+            
+          // Register for User and Resource Timing events
+          observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+          performance.mark('registered-observer');
+          
+          // Log document state changes to performance timeline
+          document.onreadystatechange = function () {
+            performance.mark("dom-"+document.readyState);
+          }          
+        </pre>
+      </section>
+    </section>
+
+    <section>
+      <h2>High-Resolution Time</h2>
+
+      <section>
+        <h2>Introduction</h2>
+        <p>High Resolution Time (L2) spec defines an API that provides the current time in sub-millisecond resolution and such that it is not subject to system clock skew or adjustments.</p>
+      </section>
+
+      <section>
+        <h2>Monotonic Clock</h2>
+        <p>In early stages of design, our Timing APIs were defined in terms of wall-clock epoch times.  Unfortunately, such times on modern computer system have an unpleasant property: they are not monotonically increasing at the rate time actually passes at. In particular, NTP adjustments, leap seconds, user configuration changes, and so forth can cause the epoch time reported by the system to go backwards, go forwards to fast or go forwards too slowly.</p>
+        <p>
+          For example, a positive number, negative number, or zero may be logged in between the two calls to Date.now().
+        </p>
+        <pre class='example highlight'>
+var mark_start = Date.now();
+doTask(); // Some task
+if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark_start));
+        </pre>
+        <p>
+          The idea of High Resolution Time is to provides a monotonic, uniformly increasing timestamp suitable for interval measurements, which is made possible based on the following rules:
+        </p>
+        <ul>
+          <li>The time values returned when calling the <a>now</a> method on <a>Performance</a> objects with the same <a>time origin</a> MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.</li>
+          <li>The difference between any two chronologically recorded time values returned from the<a>now</a> method MUST never be negative if the two time values have the same <a>time origin</a>.</li>
+          <li><code>translateTime</code> MUST be used to compare two chronologically recorded time values of different <a>time origin</a>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h2>Sub-millisecond Resolution</h2>
+        <p>
+          <code>Date.now()</code> [[ECMA-262]] is genuinely useful in determining the current value of the calendar time and has a long history of usage. However, looking longer term, there's a need for more precision.</p>
+        <p>
+          One example is graphics. When calculating the frame rate of a script based animation, developers will need sub-millisecond resolution in order to determine if an animation is drawing at 60 FPS. Without sub-millisecond resolution, a developer can only determine if an animation is drawing at 58.8 FPS or 62.5 FPS.
+        </p>
+        <p> 
+          The <a>DOMHighResTimeStamp</a> type and the <a>now</a> method of the <a>Performance</a> interface resolve the issues summarized in this section by providing a time value in sub-millisecond resolution.
+        </p>
+        </section>
+
+        <section>
+          <h2>Time Origin</h2>
+          <p>Time Origin determines the time value from which time is measured. For a dedicated worker or a document the origin time is the start of page navigation of that document, and for a shared worker the origin time is when the shared worker is created. For a more accurate defination, please check the spec <a href="http://www.w3.org/TR/hr-time-2/#time-origin-1">detail</a>.</p>
+          <p>
+          Suppose we have a shared worker A that was created 10ms after the start of navigation of the parent document. If we call performance.now() 5ms after the shared worker A was created in both the worker and the parent context, we should see the following values:</p>
+          <pre class='example highlight'>
+          Shared worker A:
+          performance.now(): 5.000 ms
+
+          Parent context:
+          performance.now(): 15.000 ms
+          </pre>
+          <p>
+            To display such events on the same timeline, the application can translate the DOMHighResTimeStamps from the worker with the translateTime method.
+          </p>
+          <pre class="example highlight prettyprint prettyprinted" style=""><span class="com">// ---- worker.js -----------------------------</span><span class="pln">
+</span><span class="com">// Shared worker script</span><span class="pln">
+onconnect </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">e</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> port </span><span class="pun">=</span><span class="pln"> e</span><span class="pun">.</span><span class="pln">ports</span><span class="pun">[</span><span class="lit">0</span><span class="pun">];</span><span class="pln">
+  port</span><span class="pun">.</span><span class="pln">onmessage </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">e</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Time execution in worker</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> task_start </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">now</span><span class="pun">();</span><span class="pln">
+    result </span><span class="pun">=</span><span class="pln"> runSomeWorkerTask</span><span class="pun">();</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> task_end </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">now</span><span class="pun">();</span><span class="pln">
+
+    port</span><span class="pun">.</span><span class="pln">postMessage</span><span class="pun">({</span><span class="pln">
+       </span><span class="str">'task'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Some worker task'</span><span class="pun">,</span><span class="pln">
+       </span><span class="str">'start_time'</span><span class="pun">:</span><span class="pln"> task_start</span><span class="pun">,</span><span class="pln">
+       </span><span class="str">'end_time'</span><span class="pun">:</span><span class="pln"> task_end</span><span class="pun">,</span><span class="pln">
+       </span><span class="str">'result'</span><span class="pun">:</span><span class="pln"> result
+    </span><span class="pun">});</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="com">// ---- application.js ------------------------</span><span class="pln">
+</span><span class="com">// Timing tasks in the document</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> task_start </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">now</span><span class="pun">();</span><span class="pln">
+result </span><span class="pun">=</span><span class="pln"> runSomeWorkerTask</span><span class="pun">();</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> task_end </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">now</span><span class="pun">();</span><span class="pln">
+
+plotEventOnTimeline</span><span class="pun">({</span><span class="pln">
+  </span><span class="str">'task'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Some document task'</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">'start_time'</span><span class="pun">:</span><span class="pln"> task_start</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">'end_time'</span><span class="pun">:</span><span class="pln"> task_end</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">'result'</span><span class="pun">:</span><span class="pln"> result
+</span><span class="pun">});</span><span class="pln">
+
+</span><span class="com">// Translating worker timestamps into document's time origin</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> worker </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">SharedWorker</span><span class="pun">(</span><span class="str">'worker.js'</span><span class="pun">);</span><span class="pln">
+worker</span><span class="pun">.</span><span class="pln">port</span><span class="pun">.</span><span class="pln">onmessage </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">event</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> msg </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">event</span><span class="pun">.</span><span class="pln">data</span><span class="pun">;</span><span class="pln">
+
+  </span><span class="com">// translate timestamps into document's time origin</span><span class="pln">
+  msg</span><span class="pun">.</span><span class="pln">start_time </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">translateTime</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">.</span><span class="pln">start_time</span><span class="pun">,</span><span class="pln"> worker</span><span class="pun">);</span><span class="pln">
+  msg</span><span class="pun">.</span><span class="pln">end_time </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">translateTime</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">.</span><span class="pln">end_time</span><span class="pun">,</span><span class="pln"> worker</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="com">// plot the results on document's timeline</span><span class="pln">
+  plotEventOnTimeline</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span>
+</pre>
+        <p>Adding originTime to the performance.now(), gives us a time value that is comparable in either context. Now we would get something like so:</p>
+
+        <pre class='example highlight'>
+          Shared worker A:
+          performance.now(): 5.000 ms
+          performance.originTime: 110.000 ms
+          performance.originTime + performance.now(): 115.000 ms
+
+          Parent context:
+          performance.now(): 15.000 ms
+          performance.originTime: 100.000 ms
+          performance.originTime + performance.now(): 115.000 ms
+        </pre>
+        </section>
+      </section>
+
+      <section>
+        <h2>Navigation Timing</h2>
+        <p>Now that we know how to get timing metrics for individual resources, let's go a step further to access the complete timing information for navigation of a document.</p>
+        <section>
+          <h3>Navigation Timing and Resource Timing</h3>
+          <p>Navigation is about how the user agents convert the requested HTML, CSS, and JavaScript into rendered pixels, which is one of the most critical steps for users to navigate a document. Navigation Timing API is the start point of the Web Performance APIs, so when the Performance Timeline APIs was created in 2011, the original design of Navigation Timing has been widely implemented and too late to align it with the Performance Timeline.</p>
+          <p>In [[NAVIGATION-TIMING]], by accessing <code>window.performance.navigation</code>, you will get an instance of <code><a href="http://www.w3.org/TR/navigation-timing/#sec-navigation-timing">PerformanceNavigationTiming</a></code> which provides timing-related information about the page’s performance. This doesn't fit in the goal to offer a unified entry by <code>performance.getEntries.</code></p>
+          <p>Now that we got the opportunity to fix this historical bug in Level 2. The ideal design for Navigation Timing is to participate in the Performance Timeline API. Also, it extends <code>initiatorType</code> and <code>workerStart</code> from the <code>PerformanceResourceTiming</code> interface.
+        </section>
+        <section>
+          <h3>The PerformanceNavigationTiming attributes</h3>
+          <figure id="fig4">
+          <img style="width:60%" src="./images/navigation-timing-attributes.png" alt="Navigation Timing Attrs">
+          <figcaption><span class="fig-title">Navigation Timing Attrbutes</span></figcaption>
+          </figure>
+          </section>
+        </section>
+
+      <section>
+        <h2>User Timing</h2>
+        <section>
+          <h3>Flexible Measurement</h3>
+          <p>
+            So far, with Navigation Timing and Resource Timing, you can sufficiently access the timing information of those critical moments in resource loading and page navigation, but, what if you want to figure out what's going wrong with a button-click interaction of your user? Is it possible to obtain the high precision performance characteristics of a individual task which is important to you?
+          </p>
+          <p>User Timing, which is an extension to the <code>Performance</code> interface, can help you measure the performance of your applications by providing high precision timestamps.</p>
+          <p>
+            Here's a general example that shows how a developer can use the interfaces defined in this document to obtain timing data related to developer scripts.
+          </p>
+          <pre class="example highlight prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span><span class="pln">
+</span><span class="tag">&lt;html&gt;</span><span class="pln">
+  </span><span class="tag">&lt;head&gt;</span><span class="pln">
+    </span><span class="tag">&lt;title&gt;</span><span class="pln">User Timing example</span><span class="tag">&lt;/title&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/head&gt;</span><span class="pln">
+  </span><span class="tag">&lt;body</span><span class="pln"> </span><span class="atn">onload</span><span class="pun">=</span><span class="atv">"</span><span class="pln">init</span><span class="pun">()</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;script&gt;</span><span class="pln">
+       </span><span class="kwd">function</span><span class="pln"> init</span><span class="pun">()</span><span class="pln">
+       </span><span class="pun">{</span><span class="pln">
+            performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"startTask1"</span><span class="pun">);</span><span class="pln">
+            doTask1</span><span class="pun">();</span><span class="pln"> </span><span class="com">// Some developer code</span><span class="pln">
+            performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"endTask1"</span><span class="pun">);</span><span class="pln">
+
+            performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"startTask2"</span><span class="pun">);</span><span class="pln">
+            doTask2</span><span class="pun">();</span><span class="pln"> </span><span class="com">// Some developer code</span><span class="pln">
+            performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"endTask2"</span><span class="pun">);</span><span class="pln">
+
+            measurePerf</span><span class="pun">();</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+
+       </span><span class="kwd">function</span><span class="pln"> measurePerf</span><span class="pun">()</span><span class="pln">
+       </span><span class="pun">{</span><span class="pln">
+           </span><span class="kwd">var</span><span class="pln"> perfEntries </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">getEntriesByType</span><span class="pun">(</span><span class="str">"mark"</span><span class="pun">);</span><span class="pln">
+           </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> perfEntries</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
+           </span><span class="pun">{</span><span class="pln">
+                 </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">window</span><span class="pun">.</span><span class="pln">console</span><span class="pun">)</span><span class="pln"> console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Name: "</span><span class="pln">        </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">name      </span><span class="pun">+</span><span class="pln">
+                                                 </span><span class="str">" Entry Type: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">entryType </span><span class="pun">+</span><span class="pln">
+                                                 </span><span class="str">" Start Time: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">startTime </span><span class="pun">+</span><span class="pln">
+                                                 </span><span class="str">" Duration: "</span><span class="pln">   </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">duration  </span><span class="pun">+</span><span class="pln"> </span><span class="str">"\n"</span><span class="pun">);</span><span class="pln">
+           </span><span class="pun">}</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/body&gt;</span><span class="pln">
+</span><span class="tag">&lt;/html&gt;</span></pre>
+        </section>
+        <section>
+          <h3>performance.mark()</h3>
+          <p>The <code>PerformanceMark</code> interface extends the <code>Performance</code> interface, and exposes marks to the users by a funtion named <code>mark()</code>. </p>
+          <p><code>mark()</code> allows web developers to make unique marks in their web application, and constomize the mark with a DOMString markName, f.ex. <code>window.performance.mark('before_click');</code></p>
+          <p>Taking advatage of the <code>Performance</code> interface, it's pretty easy to access the marks you have storaged. By calling <code>window.performance.getEntriesByType('mark')</code>, you will get a list of all the marks in your application. </p>
+          <p>When a mark is no longer of any value, you can get rid of it by <code>clearMarks('name')</code>, or even clear all the marks with <code>clearMarks()</code>.</p>
+        </section>
+        <section>
+          <h3>performance.measure()</h3>
+          <p>When you have prepeared enought marks, the <code>PerformanceMeasure</code> interface can help you figure out the elapsed time between two marks. This interface is also an extension to the <code>Performance</code> interface, which exposes measures created via the <code>measure()</code> method. Here, <code>measure()</code> stores the DOMHighResTimeStamp duration between two marks along with the associated name (a "measure"). For example, to measure a successive click, we can call <code>window.performance.measure('measure_click', 'click_before', 'click_after');</code>.</p>
+          <p>Similar to the <code>PerformanceMark</code> interface, you can get measures by simply calling <code>window.performance.getEntriesByType('measure')</code>, and use <code>clearMeasures()</code> method to delete measures.
+          </p>
+        </section>
+      </section>
+
+      <section>
+        <h2>Roadmap of Performance Monitoring</h2>
+        <section>
+          <h3>Current Plan</h3>
+          <p>
+          Most of these Web Performance Timing APIs are still work in process, <a href="#fig5">Fig.5</a> is a the dependency graph that can explain our current plan of the Performance monitoring specs.
+          </p>
+          <figure id="fig5">
+          <img style="width:85%" src="./images/W3C-WebPerf-deps-graph.png" alt="Performance monitoring APIs Deps Graph">
+          <figcaption><span class="fig-title">Web Performance Timing APIs Dependency Graph</span></figcaption>
+          </figure>
+        </section>
+        <section>
+        <h3>Browser Support</h3>
+        <p>Most of the Performance Timing APIs above have been landed in the <a href="http://caniuse.com/#search=timing">major browsers</a>. The Web Performance WG also provide a <a href="http://www.w3.org/2015/10/webperf-all.html">detail report</a>(by October 21, 2015) for the latest features in its deliverables.
+      </section>
+      </section>
+    </section>
+  </body>
+</html>
