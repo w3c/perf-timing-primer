@@ -410,16 +410,16 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
         <section>
           <h3>Current Plan</h3>
           <p>
-          Most of the above Web Performance Timing APIs are still work in process. <a href="#fig9">Fig.9</a> is a the dependency graph that can explain our current plan of all the Performance monitoring specs.
+          Most of the above Web Performance Timing APIs are still work in process. <a href="#fig9">Fig.9</a> display an overview of the current plan of the Performance monitoring specs within the Web Performance Working Group.
           </p>
           <figure id="fig9">
           <img style="width:85%" src="./images/W3C-WebPerf-deps-graph.png" alt="Performance monitoring APIs Deps Graph">
-          <figcaption><span class="fig-title">Web Performance Timing APIs <a href="https://docs.google.com/document/d/1ZKW9N0cteHgK91SyYQONFuy2ZW6J4Oak398niTo232E/">Dependency Graphn</a>, by Ilya Grigorik.</span></figcaption>
+          <figcaption><span class="fig-title">Web Performance Monitoring APIs <a href="https://docs.google.com/document/d/1ZKW9N0cteHgK91SyYQONFuy2ZW6J4Oak398niTo232E/">Overview</a>, by <a href="mailto:igrigorik@google.com">Ilya Grigorik</a>.</span></figcaption>
           </figure>
         </section>
         <section>
-        <h3>The Full Potential of Web Proformance Monitoring</h3>
-        <p>As you may guess from <a href="#fig9">this roadmap</a>, in the future, we will continue explore those potential performance areas where developers would like to know more.</p>
+        <h3>Potential Areas for Future Development</h3>
+        <p>Based on the <a href="#fig9">roadmap</a>, the group is exploring a few potential areas where developers would like collect performance details.</p>
         <section>
           <h4>Server Timing</h4>
           <p>[[SERVER-TIMING]] is an attampt to address the concern about lacking insight into how or why certain stages of the request-response cycle have taken as much time as they have - e.g. how the request was routed, where the time was spent on the server, and so on. This API defines a mechanism enables the server to communicate performance metrics about the request-response cycle to the user agent, and a JavaScript interface to enable applications to collect, process, and act on these metrics to optimize application delivery. </p>
@@ -433,8 +433,8 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
           <p>This API also participates in the [[PERFORMANCE-TIMELINE-2]], with a <code>entryType</code> value as "<code>frame</code>".</p>
         </section>
         <section>
-          <h4>Observer</h4>
-          <p>Resource and user timings has been useful by provide performance data, but in some occations it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
+          <h4>PerformanceObserver</h4>
+          <p>Resource Timing and User Timing has been useful by provide performance data, but in some occations it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
           <p>In <a href="http://www.w3.org/TR/performance-timeline-2/#the-performanceobserver-interface">Performace Timeline Level 2</a>, the <code>PerformanceObserver interface</code> tries to solve this problem by allowing subscribing to / observing new performance events delivered into the Performance Timeline.</p>
         </section>
       </section>
