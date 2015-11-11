@@ -9,11 +9,12 @@
           shortName:  "perf-timing-primer",
           editors: [
             {
-              name:       "A list of contributors in GitHub",
-              url:        "https://github.com/w3c/somerepo"
+              name:       "Xiaoqian Wu",
+              mailto:      "xiaoqian@w3.org",
+              company:    "W3C"
             }
           ],
-          edDraftURI:   "TBD",
+          edDraftURI:   "http://siusin.github.io/perf-timing-primer/",
           wg:           "Web Performance Working Group",
           wgURI:        "http://www.w3.org/2010/webperf/",
           wgPublicList: "public-web-perf",
@@ -26,33 +27,61 @@
 
     <section id='abstract'>
       <p>
-        This document describes the basic concepts of a various set of Web Performance Timeline related specifications, including [[PERFORMANCE-TIMELINE-2]], [[HR-TIME-2]], [[NAVIGATION-TIMING-2]], [[RESOURCE-TIMING]], [[USER-TIMING]], [[SERVER-TIMING]], and provide a clear idea how these APIs fit together.
+        This document introduces the basic concepts of various Web performance timing specifications, including [[PERFORMANCE-TIMELINE-2]], [[HR-TIME-2]], [[NAVIGATION-TIMING-2]], [[RESOURCE-TIMING]], [[USER-TIMING]], [[FRAME-TIMING]], [[SERVER-TIMING]], and explains how these APIs fit together.
       </p>
     </section>
 
     <section id='sotd'>
       <p>
-        This document is a collaboration of the <a href="http://www.w3.org/2010/webperf/">W3C Web Performance Working Group</a>. Most use cases in this document are originated from the working group's past discussion <a href="https://lists.w3.org/Archives/Public/public-web-perf/">achieved</a> in their mailing list.
+        This document is a collaboration of the <a href="http://www.w3.org/2010/webperf/">W3C Web Performance Working Group</a>. Most use cases in this document are originated from the working group's past discussion, which was <a href="https://lists.w3.org/Archives/Public/public-web-perf/">achieved</a> in the group's mailing list <a href="mailto:public-web-perf-request@w3.org?subject=subscribe">public-web-perf@w3.org</a> and <a href="http://www.w3.org/2010/webperf/">GitHub Repos</a>.
       </p>
     </section>
 
     <section>
       <h2>Overview</h2>
       <p>
-        Image you're visiting the W3C website, if the web content doesn't show up in the screeen within a certain seconds, as users, you might just close the tab and head to alternatives, but as developers, you might wish to trace the hints in the requests and timing details so that you can find out what's slowing down the webpage.
-        </p>
-        <p>
-        Luckily, most browser vendors are willing to expose these performance characteristics via a set of performance APIs. With these convenient features, developers can better identify the bottlenecks of the web applications and serve the faster web applications.
+        Image you're visiting the W3C website, if the web content doesn't show up in the screeen within certain seconds, as users, you may just close the tab and head to alternatives, but as developers, you will hope to trace the hints in the requests and navigation details, so that you can find out what's slowing down your webpage.
       </p>
-      <figure id="fig1">
-        <img alt="network data for w3.org" src="./images/w3-org-network-timing.png" class="graph" style="width: 70%">
-        <figcaption><span class="fig-title">A Waterfall Chart for w3.org</span></figcaption>
+      <p>
+        Fortunately, most browser vendors are willing to expose performance characteristics for developers to collect accurate  performance details. These performance timing APIs, as you can see from their names, are very helpful to identify the bottlenecks of the web applications from different aspects and improve the performance.
+      </p>
+      <figure style="margin:10px 0" id="fig1">
+        <div id="waterfall-div" style="border: 2px solid rgb(0, 0, 0); position: relative; top: 0px; left: 0px; z-index: 99999; margin: 0px; padding: 0px; background: rgb(255, 255, 255); width: 1180px">
+        <svg viewBox="1180 72" width="1180" height="72"><text x="100" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="middle">0</text><line x1="100" y1="12" x2="100" y2="72" style="stroke: #ccc;"></line><text x="614.2556448524249" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="middle">1</text><line x1="614.2556448524249" y1="12" x2="614.2556448524249" y2="72" style="stroke: #ccc;"></line><text x="1128.5112897048498" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="middle">2</text><line x1="1128.5112897048498" y1="12" x2="1128.5112897048498" y2="72" style="stroke: #ccc;"></line><g transform="translate(0,12)"><text x="5" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="start">/TR/resource-timing/</text><g transform="translate(200, 0)"><title>{
+          "duration": "869.0",
+          "tcpDuration": "441.0",
+          "requestDuration": "423.0",
+          "responseDuration": "3.0"
+        }</title>
+        <rect x="-100" y="0" width="446.88815537675725" height="10" style="fill:rgb(204, 204, 204)"></rect><rect x="1.0285112897048498" y="0" width="226.7867393799194" height="10" style="fill:rgb(255, 157, 66)"></rect><rect x="227.81525066962425" y="0" width="217.53013777257573" height="10" style="fill:rgb(64, 255, 64)"></rect>
+        <rect x="345.3453884422" y="0" width="1.5427669345572748" height="10" style="fill:rgb(52, 150, 255)"></rect></g></g><g transform="translate(0,24)"><text x="5" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="start">/StyleSheets/TR/W3C-WD</text><g transform="translate(200, 0)"><title>{
+          "start": "886.2",
+          "duration": "801.5"
+        }</title>
+        <rect x="355.7498086473669" y="0" width="412.1645857256619" height="10" style="fill:rgb(204, 204, 204)"></rect></g></g><g transform="translate(0,36)"><text x="5" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="start">/Icons/w3c_home</text><g transform="translate(200, 0)"><title>{
+          "start": "893.9",
+          "duration": "796.6"
+        }</title>
+        <rect x="359.6936351870787" y="0" width="409.680730962034" height="10" style="fill:rgb(204, 204, 204)"></rect></g></g><g transform="translate(0,48)"><text x="5" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="start">/TR/reso ... view-1.png</text><g transform="translate(200, 0)"><title>{
+          "start": "899.4",
+          "duration": "1189.1",
+          "requestDuration": "396.2",
+          "responseDuration": "1.0"
+        }</title>
+        <rect x="362.5338691135019" y="0" width="611.4875023923129" height="10" style="fill:rgb(204, 204, 204)"></rect><rect x="769.7544010720962" y="0" width="203.75888585671794" height="10" style="fill:rgb(64, 255, 64)"></rect><rect x="973.513286928814" y="0" width="0.5080845770006875" height="10" style="fill:rgb(52, 150, 255)"></rect></g></g><g transform="translate(0,60)"><text x="5" y="0" dx="0" dy="10" style="font: 10px sans-serif;" text-anchor="start">/StyleS ... TR/logo-WD</text><g transform="translate(200, 0)"><title>{
+          "start": "1695.6",
+          "duration": "394.8"
+        }</title>
+        <rect x="871.9621005544924" y="0" width="203.03789944550752" height="10" style="fill:rgb(204, 204, 204)"></rect></g></g></svg>
+      </div>
+        <figcaption style="margin: 10px auto"><span class="fig-title">A Waterfall Chart generated with <a href="https://github.com/andydavies/waterfall">Page Load Waterfalls</a>, which is using the Resource Timing API</span></figcaption>
       </figure>
+      <p>Waterfall charts may be the first tool you'll think of when trying to understand the performace of your web applications. Have you ever wonder about the magic behind these graphic charts? In the following sections, we are going to explain a set of performance monitoring APIs that allow you to do more than a waterfall chart measurement.</p>
     </section>
 
     <section>
       <h2>Resource Timing</h2>
-      <p><a href="#fig1">Fig.1</a> uses a waterfall chart to illustrate the detailed network timing data for each loaded resource, with the <a href="http://www.w3.org/TR/resource-timing">Resource Timing API</a>.</p>
+      <p><a href="#fig1">Fig.1</a> is a waterfall chart for the timing data for each loaded resource of a simple webpage. Actually, the [[Resource Timing]] API</a> can provide much more detail information than this. <a href="#fig2">Fig.2</a> is a set of <a href="https://w3c.github.io/resource-timing/#attributes">attributes</a> that developers are able to access for each loaded resource on their Web applications.</p>
       <figure id="fig2">
       <img style="width:85%" src="./images/resource-timing-overview-1.png" alt="Resource Timing attributes">
       <figcaption><span class="fig-title">Resource Timing attributes</span></figcaption>
@@ -60,27 +89,14 @@
 
       <section>
         <h2>Load Times for Resources</h2>
-        <p>Web Applications are mostly consist by a set of downloadable resources. By resource, we usually mean the HTML elements, the XHR objects, and link with the link type of stylesheet or SVG elements.</p>
+        <p>Web Applications are mostly consist by a set of downloadable resources. By resource, we usually mean the HTML elements, the XHR objects, and link with the link type of stylesheet (i.e. CSS) or SVG elements.</p>
         <p>The Resources timing data are exposed as methods on the global <code>window.performance</code> object we are going to talk about in the next section. You're encourage to use <code>performance.getEntriesByType("resource")</code> method to obtain an array of Resource Timing Objects for each requested resource.</p>
       <figure id="fig3">
         <img style="width:30%" src="./images/resource-timing-detail-w3-org.png" alt="Demo of Resource Timing Details">
         <figcaption><span class="fig-title">Demo of Resource Timing Details</span></figcaption>
       </figure>
       <p>Here, the <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The duration attribute in Resource Timing can by measured as the difference between responseEnd and startTime.</p>
-      <p>As indicated in <a href="#fig2">Fig.2</a> and <a href="#fig3">Fig.3</a>, you are able to access a set of critical network timing information for each resource on the page: 
-      <dl>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-workerStart">workerStart</a></code></dt><dd>If the current browsing or worker context's have an active worker, or if the worker is available.</dd>
-        <dt><code><a href="http://www.w3.org/TR/#widl-PerformanceResourceTiming-redirectStart">redirectStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-redirectEnd">redirectEnd</a></code></dt><dd>If there are HTTP redirects or equivalent when fetching the resource and if all the redirects or equivalent are from the same origin as the current document.</dd>
-        <dt><code><a href="http://www.w3.org/TR//resource-timing/#widl-PerformanceResourceTiming-fetchStart">fetchStart</a></code></dt><dd>If there are no HTTP redirects or equivalent.</dd>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-domainLookupStart">domainLookupStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-domainLookupEnd">domainLookupEnd</a></code></dt>
-        <dd>The time before / immediately after the user agent finishes the domain name lookup for the resource.</dd>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-connectStart">connectStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-connectEnd">connectEnd</a></code></dt>
-        <dd>The time immediately before the user agent starts / finishes establishing the connection to the server to retrieve the resource.</dd>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-secureConnectionStart">secureConnectionStart</a></code></dt><dd></dd>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-requestStart">requestStart</a></code></dt>
-        <dd>The time immediately before the user agent starts requesting the resource from the server, or from relevant application caches or from local resources.</dd>
-        <dt><code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-responseStart">responseStart</a></code> / <code><a href="http://www.w3.org/TR/resource-timing/#widl-PerformanceResourceTiming-responseEnd">responseEnd</a></code></dt><dd></dd>
-      </dl>
+      <p>As indicated in <a href="#fig2">Fig.2</a> and <a href="#fig3">Fig.3</a>, you are able to access a set of critical network timing <a href="https://w3c.github.io/resource-timing/#attributes">attributes</a> for each resource on the page.
       </p>
       <p>Each of these time stamp is in microseconds, as defined by the <code>window.performance.now()</code> method in the<a href="http://www.w3.org/TR/hr-time/#sec-high-resolution-time">High ResolutionTime specification</a>.</p>
       </section>
@@ -117,55 +133,28 @@
   </span><span class="tag">&lt;/body&gt;</span><span class="pln">
 </span><span class="tag">&lt;/html&gt;</span></pre>
       </section>
+
+      <section>
+        <h3>Browser Support</h3>
+        <p>So far, the [[Resource Timing]] API has been widely impletemated. <a href="#fig4">Fig.4</a> illustrates the current support data on the major desktop and mobile web browsers, please also visit the source on <a href="http://caniuse.com/#feat=resource-timing">caniuse.com</a> for the latest status.
+        <figure id="fig4">
+      <img style="width:85%" src="./images/can-i-use-resource-timing.png" alt="Can I use Resource Timing">
+      <figcaption><span class="fig-title">Can I use Resource Timing API?</span></figcaption>
+      </figure>
+      </section>
     </section>
 
     <section>
       <h2>Performance Timeline</h2>
       <section>
         <h3>Overview</h3>
-        <p>As Navigation Timing, Resource Timing, and User Timing were gradually taking shape, the group decided to unified interface for these various timing specification that were basically doing the same thing with their own separate interfaces.
-        </p>
-        <p>This specification defines the necessary Performance Timeline primitives that enable web developers to access, instrument, and retrieve various performance metrics from the full lifecycle of a web application.</p>
+        <p>You may already start thinking about if the timing data of the resources on the webpages is enough to measure its performance. Yeah, to understand your web application, it's always necessary to explore more: page nagivation, user interaction, request-response cycle, and so on. Based on this need, the group introduces Performance Timeline, which is a unified interface to obtain various performance metrics.
         <p>
-        A developer can obtain performance metrics related to the navigation of the document, resources on the page, and developer scripts via the the Performance Timeline:
-        </p>
-
-        <pre class="highlight example prettyprint prettyprinted" style="">
-        <span class="dec">&lt;!doctype html&gt;</span><span class="pln">
-</span><span class="tag">&lt;html&gt;</span><span class="pln">
-</span><span class="tag">&lt;head&gt;</span><span class="pln">
-</span><span class="tag">&lt;/head&gt;</span><span class="pln">
-</span><span class="tag">&lt;body</span><span class="pln"> </span><span class="atn">onload</span><span class="pun">=</span><span class="atv">"</span><span class="pln">init</span><span class="pun">()</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
-</span><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"image0"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"http://www.w3.org/Icons/w3c_main.png"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
-</span><span class="tag">&lt;script&gt;</span><span class="pln">
-   </span><span class="kwd">function</span><span class="pln"> init</span><span class="pun">()</span><span class="pln">
-   </span><span class="pun">{</span><span class="pln">
-        performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"startWork"</span><span class="pun">);</span><span class="pln"> </span><span class="com">// see [[User Timing]]</span><span class="pln">
-        doWork</span><span class="pun">();</span><span class="pln"> </span><span class="com">// Some developer code</span><span class="pln">
-        performance</span><span class="pun">.</span><span class="pln">mark</span><span class="pun">(</span><span class="str">"endWork"</span><span class="pun">);</span><span class="pln">
-
-        measurePerf</span><span class="pun">();</span><span class="pln">
-   </span><span class="pun">}</span><span class="pln">
-
-   </span><span class="kwd">function</span><span class="pln"> measurePerf</span><span class="pun">()</span><span class="pln">
-   </span><span class="pun">{</span><span class="pln">
-       </span><span class="kwd">var</span><span class="pln"> perfEntries </span><span class="pun">=</span><span class="pln"> performance</span><span class="pun">.</span><span class="pln">getEntries</span><span class="pun">();</span><span class="pln">
-       </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> perfEntries</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
-       </span><span class="pun">{</span><span class="pln">
-             </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">window</span><span class="pun">.</span><span class="pln">console</span><span class="pun">)</span><span class="pln"> console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Name: "</span><span class="pln">        </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">name      </span><span class="pun">+</span><span class="pln">
-                                             </span><span class="str">" Entry Type: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">entryType </span><span class="pun">+</span><span class="pln">
-                                             </span><span class="str">" Start Time: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">startTime </span><span class="pun">+</span><span class="pln">
-                                             </span><span class="str">" Duration: "</span><span class="pln">   </span><span class="pun">+</span><span class="pln"> perfEntries</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">duration  </span><span class="pun">+</span><span class="pln"> </span><span class="str">"\n"</span><span class="pun">);</span><span class="pln">
-       </span><span class="pun">}</span><span class="pln">
-   </span><span class="pun">}</span><span class="pln">
-</span><span class="tag">&lt;/script&gt;</span><span class="pln">
-</span><span class="tag">&lt;/body&gt;</span><span class="pln">
-</span><span class="tag">&lt;/html&gt;</span></pre>
-          </section>
-          <section>
-            <h3>EntryType</h3>
-            <p>The Performance TimeLine introduces PerformanceEntry.entryType to describes the type of the interface represented by this PerformanceEntry object, which represents performance measurements.</p>
-            <pre class='example highlight'>
+      </section>
+      <section>
+        <h3>EntryType</h3>
+        <p>The Performance Timeline API uses <code>PerformanceEntry.entryType</code> to describe the type of the interface represented by this PerformanceEntry object, which represents performance measurements.</p>
+        <pre class='example highlight'>
  var entryType = performance.getEntries()[0].entryType
 // Entry Type
       </pre>
@@ -194,30 +183,6 @@
           <tr><td>"server"</td><td>PerformanceServerTiming</td><td><a rel="nofollow" class="external text" href="http://w3c.github.io/server-timing/">Server Timing</a></td><td>work in progress</td></tr>
         </tbody></table>
       </section>
-      <section>
-        <h3>Observer</h3>
-        <p>Resource and user timings has been useful by provide performance data, but in some occations it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
-        <p>In Performace Timeline Level 2, the <code>PerformanceObserver interface</code> is introduced to allow subscribing to / observing new performance events delivered into the Performance Timeline.</p>
-        <p>Here's an <a href="http://output.jsbin.com/xodibo/latest/quiet">early example</a> of Performance Observer:</p>
-        <pre class='example highlight'>    
-          var observer = new PerformanceObserver(function(list) {      
-            list.getEntries().map(entry =&gt; {
-              var pre = document.createElement('pre')
-              pre.innerText = JSON.stringify(obj(entry), null, '\t');
-              document.getElementById('observe').appendChild(pre);
-            })
-          });
-            
-          // Register for User and Resource Timing events
-          observer.observe({entryTypes: ['resource', 'mark', 'measure']});
-          performance.mark('registered-observer');
-          
-          // Log document state changes to performance timeline
-          document.onreadystatechange = function () {
-            performance.mark("dom-"+document.readyState);
-          }          
-        </pre>
-      </section>
     </section>
 
     <section>
@@ -225,7 +190,7 @@
 
       <section>
         <h2>Introduction</h2>
-        <p>High Resolution Time (L2) spec defines an API that provides the current time in sub-millisecond resolution and such that it is not subject to system clock skew or adjustments.</p>
+        <p>All the metrics that participate in the Performance Timeline are able to provides timing data in sub-millisecond resolution, i.e. in DOMHighResTimeStamp, which is defined by the High Resolution Time (L2) spec.</p>
       </section>
 
       <section>
@@ -252,7 +217,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
       <section>
         <h2>Sub-millisecond Resolution</h2>
         <p>
-          <code>Date.now()</code> [[ECMA-262]] is genuinely useful in determining the current value of the calendar time and has a long history of usage. However, looking longer term, there's a need for more precision.</p>
+          <code>Date.now()</code> is genuinely useful in determining the current value of the calendar time and has a long history of usage. However, looking longer term, there's a need for more precision.</p>
         <p>
           One example is graphics. When calculating the frame rate of a script based animation, developers will need sub-millisecond resolution in order to determine if an animation is drawing at 60 FPS. Without sub-millisecond resolution, a developer can only determine if an animation is drawing at 58.8 FPS or 62.5 FPS.
         </p>
@@ -341,18 +306,33 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
         <h2>Navigation Timing</h2>
         <p>Now that we know how to get timing metrics for individual resources, let's go a step further to access the complete timing information for navigation of a document.</p>
         <section>
-          <h3>Navigation Timing and Resource Timing</h3>
-          <p>Navigation is about how the user agents convert the requested HTML, CSS, and JavaScript into rendered pixels, which is one of the most critical steps for users to navigate a document. Navigation Timing API is the start point of the Web Performance APIs, so when the Performance Timeline APIs was created in 2011, the original design of Navigation Timing has been widely implemented and too late to align it with the Performance Timeline.</p>
-          <p>In [[NAVIGATION-TIMING]], by accessing <code>window.performance.navigation</code>, you will get an instance of <code><a href="http://www.w3.org/TR/navigation-timing/#sec-navigation-timing">PerformanceNavigationTiming</a></code> which provides timing-related information about the page’s performance. This doesn't fit in the goal to offer a unified entry by <code>performance.getEntries.</code></p>
-          <p>Now that we got the opportunity to fix this historical bug in Level 2. The ideal design for Navigation Timing is to participate in the Performance Timeline API. Also, it extends <code>initiatorType</code> and <code>workerStart</code> from the <code>PerformanceResourceTiming</code> interface.
+          <h3>Navigation Timing, Performance Timeline and Resource Timing</h3>
+          <p>Navigation is about how the user agents convert the requested HTML, CSS, and JavaScript into rendered pixels, which is one of the most critical steps for users to navigate a document.</p>
+          <p>Navigation Timing API is the start point of the Web Performance APIs. In [[NAVIGATION-TIMING]], by accessing <code>window.performance.navigation</code>, you will get an instance of <code><a href="http://www.w3.org/TR/navigation-timing/#sec-navigation-timing">PerformanceNavigationTiming</a></code> which provides timing-related information about the page’s performance. This doesn't fit in the goal to offer a unified entry by <code>performance.getEntries.</code> By the time Performance Timeline APIs was introduced in 2011, the initial design of Navigation Timing has been widely implemented so it was too late to align it with the Performance Timeline.</p>
+          <p>Navigation Timing API Level 2, is aimed to fix this historical bug. It defines an ideal design for Navigation Timing, which participates in the Performance Timeline API, and extends <code>initiatorType</code> and <code>workerStart</code> from the <code>PerformanceResourceTiming</code> interface.
         </section>
         <section>
           <h3>The PerformanceNavigationTiming attributes</h3>
-          <figure id="fig4">
+          <p><a href="#fig5">Fig.5</a> displays a list of critical performance characteristics of navigation a page defined in [[navigation-timing-2]].</p>
+          <figure id="fig5">
           <img style="width:60%" src="./images/navigation-timing-attributes.png" alt="Navigation Timing Attrs">
           <figcaption><span class="fig-title">Navigation Timing Attrbutes</span></figcaption>
           </figure>
+          <p>Below is a demo of navigating the <a href="http://www.w3.org/">www.w3.org</a> webpage.</p>
+          <figure id="fig6">
+          <img style="width:80%" src="./images/nav-timing-w3.org.png" alt="Navigation Timing of w3.org">
+          <figcaption><span class="fig-title">a demo of Navigation Timing Attrbutes, generated with <a href="https://github.com/addyosmani/timing.js/">timing.js</a>.</span></figcaption>
+          </figure>
           </section>
+
+          <section>
+        <h3>Browser Support</h3>
+        <p><a href="#fig7">Fig.7</a> is the support data table for [[NAVIGATION-TIMING]], generated by <a href="http://caniuse.com/#feat=nav-timing">caniuse.com</a>. If you are cursious about the status of the latest Navigation Timing design in Level 2, the Web Performance WG has provided a <a href="http://www.w3.org/2015/10/webperf-all.html">detail report</a>(by October 21, 2015) for the latest features in its deliverables.</p>
+        <figure id="fig7">
+      <img style="width:85%" src="./images/can-i-use-nav-timing.png" alt="Can I use Navigation Timing">
+      <figcaption><span class="fig-title">Can I use Navigation Timing API?</span></figcaption>
+      </figure>
+      </section>
         </section>
 
       <section>
@@ -414,6 +394,15 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
           <p>Similar to the <code>PerformanceMark</code> interface, you can get measures by simply calling <code>window.performance.getEntriesByType('measure')</code>, and use <code>clearMeasures()</code> method to delete measures.
           </p>
         </section>
+
+        <section>
+        <h3>Browser Support</h3>
+        <p>Nowadays, you are able to use User Timing API on most of the major browsers. Please visit <a href="http://caniuse.com/#feat=user-timing">caniuse.com</a> for the latest browser support information. </p>
+        <figure id="fig8">
+      <img style="width:85%" src="./images/can-i-use-user-timing.png" alt="Can I use User Timing">
+      <figcaption><span class="fig-title">Can I use User Timing API?</span></figcaption>
+      </figure>
+      </section>
       </section>
 
       <section>
@@ -421,16 +410,33 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
         <section>
           <h3>Current Plan</h3>
           <p>
-          Most of these Web Performance Timing APIs are still work in process, <a href="#fig5">Fig.5</a> is a the dependency graph that can explain our current plan of the Performance monitoring specs.
+          Most of the above Web Performance Timing APIs are still work in process. <a href="#fig9">Fig.9</a> is a the dependency graph that can explain our current plan of all the Performance monitoring specs.
           </p>
-          <figure id="fig5">
+          <figure id="fig9">
           <img style="width:85%" src="./images/W3C-WebPerf-deps-graph.png" alt="Performance monitoring APIs Deps Graph">
-          <figcaption><span class="fig-title">Web Performance Timing APIs Dependency Graph</span></figcaption>
+          <figcaption><span class="fig-title">Web Performance Timing APIs <a href="https://docs.google.com/document/d/1ZKW9N0cteHgK91SyYQONFuy2ZW6J4Oak398niTo232E/">Dependency Graphn</a>, by Ilya Grigorik.</span></figcaption>
           </figure>
         </section>
         <section>
-        <h3>Browser Support</h3>
-        <p>Most of the Performance Timing APIs above have been landed in the <a href="http://caniuse.com/#search=timing">major browsers</a>. The Web Performance WG also provide a <a href="http://www.w3.org/2015/10/webperf-all.html">detail report</a>(by October 21, 2015) for the latest features in its deliverables.
+        <h3>The Full Potential of Web Proformance Monitoring</h3>
+        <p>As you may guess from <a href="#fig9">this roadmap</a>, in the future, we will continue explore those potential performance areas where developers would like to know more.</p>
+        <section>
+          <h4>Server Timing</h4>
+          <p>[[SERVER-TIMING]] is an attampt to address the concern about lacking insight into how or why certain stages of the request-response cycle have taken as much time as they have - e.g. how the request was routed, where the time was spent on the server, and so on. This API defines a mechanism enables the server to communicate performance metrics about the request-response cycle to the user agent, and a JavaScript interface to enable applications to collect, process, and act on these metrics to optimize application delivery. </p>
+          <p>Being designed for the communication from server to the client, server Timing constitutes of two parts: a definition of the <code>Server-Timing</code> header field and a <code>PerformanceServerTiming</code> interface which participates in the [[PERFORMANCE-TIMELINE-2]]. More details and use cases can be found in the spec([[SERVER-TIMING]]).</p>
+        </section>
+        <section>
+          <h4>Frame Timing</h4>
+          <p></p>
+          <p>The idea of a "frame" comes from the event loop of browser processing model. To provide an interactive user experience, the browser processing model runs a continuous event loop at a certain update frequency - e.g. 60Hz refresh rate. If all of the work within each execution of the event loop (i.e. within a "frame") is completed in allotted time budget (e.g. 16.6ms for 60Hz refresh rate), the smoothness will come up to the user's expection. Otherwise, one or more frames is skipped, resulting in inconsistent response, processing, and rendering times, which hurts the user experience. </p>
+          <p>The Frame Timing API is very helpful to developers who wants to deliver a smooth and responsive user experience. It an interface for web applications to access runtime performance information of the browser event loop, enabling them to identify and fix issues that cause delayed rendering, processing of input, and other critical work necessary to deliver a smooth and responsive user experience. </p>
+          <p>This API also participates in the [[PERFORMANCE-TIMELINE-2]], with a <code>entryType</code> value as "<code>frame</code>".</p>
+        </section>
+        <section>
+          <h4>Observer</h4>
+          <p>Resource and user timings has been useful by provide performance data, but in some occations it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
+          <p>In <a href="http://www.w3.org/TR/performance-timeline-2/#the-performanceobserver-interface">Performace Timeline Level 2</a>, the <code>PerformanceObserver interface</code> tries to solve this problem by allowing subscribing to / observing new performance events delivered into the Performance Timeline.</p>
+        </section>
       </section>
       </section>
     </section>
