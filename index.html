@@ -114,10 +114,10 @@
         <img style="width:30%" src="./images/resource-timing-detail-w3-org.png" alt="Demo of Resource Timing Details">
         <figcaption><span class="fig-title">Demo of Resource Timing Details</span></figcaption>
       </figure>
-      <p>The <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The duration attribute in Resource Timing can by measured as the difference between responseEnd and startTime.</p>
+      <p>The <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The <code>attribute</code> in Resource Timing can by measured as the difference between <code>responseEnd</code> and <code>startTime</code>.</p>
       <p>As shown in <a href="#fig2">Fig.2</a> and <a href="#fig3">Fig.3</a>, you are able to access a set of critical network timing <a href="https://w3c.github.io/resource-timing/#attributes">attributes</a> for each resource on the page.
       </p>
-      <p>Each of these timestamps is in microseconds, which are provided by the <code>window.performance.now()</code> method in the <a href="http://www.w3.org/TR/hr-time/#sec-high-resolution-time">High ResolutionTime specification</a>.</p>
+      <p>Each of these timestamps is in microseconds, which are provided by the <code>window.performance.now()</code> method in the <a href="http://www.w3.org/TR/hr-time/#sec-high-resolution-time">High Resolution Time specification</a>.</p>
       </section>
 
       <section>
@@ -167,30 +167,30 @@
       <h2>Performance Timeline</h2>
       <section>
         <h3>Overview</h3>
-        <p>You may already start thinking about, if these timing datas of the resources on the webpages are good enough to measure its performance? Right, to understand your web application, it's always necessary to explore more: page nagivation, user interaction, request-response cycle, ect. According to this requirement, the group introduces Performance Timeline, which is a unified interface to obtain various performance metrics.
+        <p>You may already start thinking about, if these timing data of the resources on the webpages are good enough to measure its performance? Right, to understand your web application, it's always necessary to explore more: page nagivation, user interaction, request-response cycle, etc. According to this requirement, the Web Performance Working Group introduces Performance Timeline, which is a unified interface to obtain various performance metrics.
         <p>
       </section>
       <section>
         <h3>EntryType</h3>
-        <p>The Performance Timeline API uses <code>PerformanceEntry.entryType</code> to describe the type of the interface represented by this PerformanceEntry object, which represents performance measurements.</p>
+        <p>The Performance Timeline API uses <code>PerformanceEntry.entryType</code> to describe the type of the interface represented by this <code>PerformanceEntry</code> object, which represents performance measurements.</p>
         <pre class='example highlight'>
  var entryType = performance.getEntries()[0].entryType
 // Entry Type
       </pre>
-      <p>Each of the PerformanceEntry objects expose the following inherited attributes:
+      <p>Each of the <code>PerformanceEntry</code> objects expose the following inherited attributes:
         <dl>
           <dt><code>name</code></dt>
-          <dd>A DOMString identifier for this PerformanceEntry object. Not necessarily unique.</dd>
+          <dd>A DOMString identifier for this <code>PerformanceEntry</code> object. Not necessarily unique.</dd>
           <dt><code>entryType</code></dt>
-          <dd>The DOMString that describes the type of the interface represented by this PerformanceEntry object.</dd>
+          <dd>The DOMString that describes the type of the interface represented by this <code>PerformanceEntry</code> object.</dd>
           <dt><code>startTime</code></dt>
           <dd>A DOMHighResTimeStamp that contains the time value of the first recorded timestamp of this performance metric.</dd>
           <dt><code>duration</code></dt>
-          <dd>A DOMHighResTimeStamp that contains the time value of the duration of the entire event being recorded by this PerformanceEntry.</dd>
+          <dd>A DOMHighResTimeStamp that contains the time value of the duration of the entire event being recorded by this <code>PerformanceEntry</code>.</dd>
         </dl>
       </p>
       <p>
-        The W3C WebPerf WG <a href="http://www.w3.org/wiki/Web_Performance/EntryType">maintains a list</a> of the known values for PerformanceEntry.entryType.
+        The W3C WebPerf WG <a href="http://www.w3.org/wiki/Web_Performance/EntryType">maintains a list</a> of the known values for <code>PerformanceEntry.entryType</code>.
       </p>
       <table>
         <tbody><tr><th>entryType value</th><th>Interface name</th><th>Specification</th><th>Remarks</th></tr>
@@ -209,14 +209,14 @@
 
       <section>
         <h2>Introduction</h2>
-        <p>All of the metrics that participate in the Performance Timeline are able to provides timing data in sub-millisecond resolution, i.e. in DOMHighResTimeStamp, which is defined by the High Resolution Time (L2) spec.</p>
+        <p>All of the metrics that participate in the Performance Timeline are able to provides timing data in sub-millisecond resolution, i.e. in DOMHighResTimeStamp, which is defined by the High Resolution Time specification [[HR-TIME-2]].</p>
       </section>
 
       <section>
         <h2>Monotonic Clock</h2>
-        <p>In early stages of design, our Timing APIs were defined in terms of wall-clock epoch times. Unfortunately, such times on modern computer system have an unpleasant property: they are not monotonically increasing at the rate at which time actually passes. In particular, NTP adjustments, leap seconds, user configuration changes, and so forth can cause the epoch time reported by the system to go backwards, go forwards to fast or go forwards too slowly.</p>
+        <p>In early stages of design, our Timing APIs were defined in terms of wall-clock epoch times. Unfortunately, such times on modern computer system have an unpleasant property: they are not monotonically increasing at the rate at which time actually passes. In particular, NTP adjustments, leap seconds, user configuration changes, and so forth can cause the epoch time reported by the system to go backwards, go forwards too fast or go forwards too slowly.</p>
         <p>
-          For example, a positive number, negative number, or zero may be logged in between the two calls to Date.now().
+          For example, a positive number, negative number, or zero may be logged in between the two calls to <code>Date.now()</code>.
         </p>
         <pre class='example highlight'>
 var mark_start = Date.now();
@@ -229,7 +229,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
         <ul>
           <li>The time values returned when calling the <code>now()</code> method on <a>Performance</a> objects with the same <a>time origin</a> MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.</li>
           <li>The difference between any two chronologically recorded time values returned from the <code>now()</code> method MUST never be negative if the two time values have the same <a>time origin</a>.</li>
-          <li><code>translateTime</code> MUST be used to compare two chronologically recorded time values of different <a>time origin</a>.</li>
+          <li><code>translateTime</code> MUST be used to compare two chronologically recorded time values of different <a>time origins</a>.</li>
         </ul>
       </section>
       
@@ -249,7 +249,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
           <h2>Time Origin</h2>
           <p>Time Origin determines the time value from which time is measured. For a dedicated worker or a document the origin time is the start of page navigation of that document, and for a shared worker the origin time is when the shared worker is created. For a more accurate definition, please check the spec's <a href="http://www.w3.org/TR/hr-time-2/#time-origin-1">details</a>.</p>
           <p>
-          Suppose we have a shared worker <code>A</code> that was created 10ms after the start of navigation of the parent document. If we call performance.now() 5ms after the shared worker <code>A</code> was created in both the worker and the parent context, we should see the following values:</p>
+          Suppose we have a shared worker <code>A</code> that was created 10ms after the start of navigation of the parent document. If we call <code>performance.now()</code> 5ms after the shared worker <code>A</code> was created in both the worker and the parent context, we should see the following values:</p>
           <pre class='example highlight'>
           Shared worker A:
           performance.now(): 5.000 ms
@@ -331,7 +331,7 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
           <p>Navigation Timing API Level 2 tries to fix this historical bug by an ideal design for Navigation Timing. It participates in the Performance Timeline API, and extends <code>initiatorType</code> and <code>workerStart</code> from the <code>PerformanceResourceTiming</code> interface.
         </section>
         <section>
-          <h3>The PerformanceNavigationTiming attributes</h3>
+          <h3>The <code>PerformanceNavigationTiming</code> attributes</h3>
           <p><a href="#fig5">Fig.5</a> displays a list of critical performance characteristics of navigation a page defined in [[NAVIGATION-TIMING-2]].</p>
           <figure id="fig5">
           <img style="width:60%" src="./images/navigation-timing-attributes.png" alt="Navigation Timing Attrs">
@@ -454,7 +454,7 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
         <section>
           <h4>PerformanceObserver</h4>
           <p>Resource Timing and User Timing have been useful to provide performance data, but in some occasions, it's tricky to make use of this data if there's no notification when new performance entries have been recorded.</p>
-          <p>In [[PERFORMANCE-TIMELINE-2]], the <a href="http://www.w3.org/TR/performance-timeline-2/#the-performanceobserver-interface"><code>PerformanceObserver interface</code></a> was introduced to solve this problem. This interface makes it possible to subscribe to / observe new performance events delivered into the Performance Timeline.</p>
+          <p>In [[PERFORMANCE-TIMELINE-2]], the <a href="http://www.w3.org/TR/performance-timeline-2/#the-performanceobserver-interface"><code>PerformanceObserver</code></a> interface was introduced to solve this problem. This interface makes it possible to subscribe to / observe new performance events delivered into the Performance Timeline.</p>
         </section>
       </section>
       </section>
