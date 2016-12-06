@@ -123,34 +123,36 @@
       <section>
         <h2>Example</h2>
         <p>As an example, let's try to measure the time it takes to fetch the icon on the W3C homepage.</p>
-        <pre class="example highlight prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span><span class="pln">
-</span><span class="tag">&lt;html&gt;</span><span class="pln">
-  </span><span class="tag">&lt;head&gt;</span><span class="pln">
-  </span><span class="tag">&lt;/head&gt;</span><span class="pln">
-  </span><span class="tag">&lt;body</span><span class="pln"> </span><span class="atn">onload</span><span class="pun">=</span><span class="atv">"</span><span class="pln">loadResources</span><span class="pun">()</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
-    </span><span class="tag">&lt;script&gt;</span><span class="pln">
-       </span><span class="kwd">function</span><span class="pln"> loadResources</span><span class="pun">()</span><span class="pln">
-       </span><span class="pun">{</span><span class="pln">
-          </span><span class="kwd">var</span><span class="pln"> image1 </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Image</span><span class="pun">();</span><span class="pln">
-          image1</span><span class="pun">.</span><span class="pln">onload </span><span class="pun">=</span><span class="pln"> resourceTiming</span><span class="pun">;</span><span class="pln">
-          image1</span><span class="pun">.</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> </span><span class="str">'http://www.w3.org/Icons/w3c_main.png'</span><span class="pun">;</span><span class="pln">
-       </span><span class="pun">}</span><span class="pln">
+        <pre class='example highlight'>
+&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+  &lt;/head&gt;
+  &lt;body onload="loadResources()"&gt;
+    &lt;script&gt;
+       function loadResources()
+       {
+          var image1 = new Image();
+          image1.onload = resourceTiming;
+          image1.src = 'https://www.w3.org/Icons/w3c_main.png';
+       }
 
-       </span><span class="kwd">function</span><span class="pln"> resourceTiming</span><span class="pun">()</span><span class="pln">
-       </span><span class="pun">{</span><span class="pln">
-           </span><span class="kwd">var</span><span class="pln"> resourceList </span><span class="pun">=</span><span class="pln"> window</span><span class="pun">.</span><span class="pln">performance</span><span class="pun">.</span><span class="pln">getEntriesByType</span><span class="pun">(</span><span class="str">"resource"</span><span class="pun">);</span><span class="pln">
-           </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="pln">i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> resourceList</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
-           </span><span class="pun">{</span><span class="pln">
-              </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">initiatorType </span><span class="pun">==</span><span class="pln"> </span><span class="str">"img"</span><span class="pun">)</span><span class="pln">
-              </span><span class="pun">{</span><span class="pln">
-                 alert</span><span class="pun">(</span><span class="str">"End to end resource fetch: "</span><span class="pun">+</span><span class="pln"> resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">responseEnd </span><span class="pun">-</span><span class="pln"> resourceList</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">startTime</span><span class="pun">);</span><span class="pln">
-              </span><span class="pun">}</span><span class="pln">
-           </span><span class="pun">}</span><span class="pln">
-       </span><span class="pun">}</span><span class="pln">
-    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
-    </span><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"image0"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"http://www.w3.org/Icons/w3c_home.png"</span><span class="tag">&gt;</span><span class="pln">
-  </span><span class="tag">&lt;/body&gt;</span><span class="pln">
-</span><span class="tag">&lt;/html&gt;</span></pre>
+       function resourceTiming()
+       {
+           var resourceList = window.performance.getEntriesByType("resource");
+           for (i = 0; i &lt; resourceList.length; i++)
+           {
+              if (resourceList[i].initiatorType == "img")
+              {
+                 alert("End to end resource fetch: " + (resourceList[i].responseEnd - resourceList[i].startTime));
+              }
+           }
+       }
+    &lt;/script&gt;
+    &lt;img id="image0" src="https://www.w3.org/Icons/w3c_home.png"&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+      </pre>
       </section>
 
       <section>
