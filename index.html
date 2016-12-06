@@ -231,7 +231,6 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
         <ul>
           <li>The time values returned when calling the <code>now()</code> method on <a>Performance</a> objects with the same <a>time origin</a> MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.</li>
           <li>The difference between any two chronologically recorded time values returned from the <code>now()</code> method MUST never be negative if the two time values have the same <a>time origin</a>.</li>
-          <li><code>translateTime</code> MUST be used to compare two chronologically recorded time values of different <a>time origins</a>.</li>
         </ul>
       </section>
       
