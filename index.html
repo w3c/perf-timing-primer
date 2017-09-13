@@ -140,7 +140,7 @@
        function resourceTiming()
        {
            var resourceList = window.performance.getEntriesByType("resource");
-           for (i = 0; i &lt; resourceList.length; i++)
+           for (var i = 0; i &lt; resourceList.length; i++)
            {
               if (resourceList[i].initiatorType == "img")
               {
