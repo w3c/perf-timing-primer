@@ -3,12 +3,16 @@
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
     <title>A Primer for Web Performance Timing APIs</title>
-    <script src='//www.w3.org/Tools/respec/respec-w3c-common' class='remove' async></script>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove' async></script>
     <script class='remove'>
+    function removeLatestVersion(){
+       document.getElementsByTagName('dt')[1].remove();
+       document.getElementsByTagName('dd')[1].remove();
+    }
       var respecConfig = {
           specStatus: "ED",
-          shortName:  "perf-timing-primer",
           noRecTrack: true,
+          shortName:  "perf-timing-primer",
           editors: [
             {
               name:       "Xiaoqian Wu",
@@ -38,7 +42,8 @@
           wgURI:        "https://www.w3.org/webperf/",
           wgPublicList: "public-web-perf",
           subjectPrefix: "[Primer]",
-          wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/45211/status"
+          wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/45211/status",
+          postProcess: [removeLatestVersion]
       };
     </script>
   </head>
