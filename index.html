@@ -64,7 +64,7 @@
     <section>
       <h2>Overview</h2>
       <p>
-        Image you're visiting our W3C website, if the web content doesn't show up in the screeen within a certain number of seconds, as a user, perhaps you will just close the tab and head to alternatives. However, as a developer, you might hope to trace the hints in the requests and navigation details, so that you can find out what's slowing down this webpage.
+        Imagine you're visiting our W3C website, if the web content doesn't show up in the screeen within a certain number of seconds, as a user, perhaps you will just close the tab and head to alternatives. However, as a developer, you might hope to trace the hints in the requests and navigation details, so that you can find out what's slowing down this webpage.
       </p>
       <p>
         Fortunately, most browser vendors are willing to expose performance characteristics that allow developers to collect accurate performance details. These performance timing APIs, as their names suggest, are very helpful to identify the bottlenecks of the web applications from different aspects and improve the performance.
@@ -238,7 +238,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
           <li>The difference between any two chronologically recorded time values returned from the <code>now()</code> method MUST never be negative if the two time values have the same <a>time origin</a>.</li>
         </ul>
       </section>
-      
+
       <section>
         <h2>Sub-millisecond Resolution</h2>
         <p>
@@ -246,7 +246,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
         <p>
           One example is graphics. When calculating the frame rate of a script based animation, developers will need sub-millisecond resolution in order to determine if an animation is drawing at 60 FPS. Without sub-millisecond resolution, a developer can only determine if an animation is drawing at 58.8 FPS or 62.5 FPS.
         </p>
-        <p> 
+        <p>
           The <a>DOMHighResTimeStamp</a> type and the <code>now()</code> method of the <a>Performance</a> interface resolve the issues summarized in this section by providing a time value in sub-millisecond resolution.
         </p>
         </section>
