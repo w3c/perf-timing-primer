@@ -114,12 +114,12 @@
       <section>
         <h2>Load Times for Resources</h2>
         <p>Web Applications mostly consist of a set of downloadable resources. Here resources usually refer to HTML documents, XHR objects, links (such as a stylesheet) or SVG elements.</p>
-        <p>The Resources Timing data are exposed as methods on the global <code>window.performance</code> object we are going to talk about in the next section. You're encouraged to use the <code>performance.getEntriesByType("resource")</code> method to obtain an array of Resource Timing Objects for each requested resource.</p>
+        <p>The Resources Timing data are exposed as methods on the global <code>window.performance</code> object, which we are going to talk about in the next section. You're encouraged to use the <code>performance.getEntriesByType("resource")</code> method to obtain an array of Resource Timing Objects for each requested resource.</p>
       <figure id="fig3">
         <img style="width:30%" src="./images/resource-timing-detail-w3-org.png" alt="Demo of Resource Timing Details">
         <figcaption><span class="fig-title">Demo of Resource Timing Details</span></figcaption>
       </figure>
-      <p>The <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The <code>attribute</code> in Resource Timing can by measured as the difference between <code>responseEnd</code> and <code>startTime</code>.</p>
+      <p>The <code>PerformanceResourceTiming</code> interface extends the <code>PerformanceEntry</code> interface in the <a href="#performance-timeline">Performance Timeline</a>. The <code>attribute</code> in Resource Timing can be measured as the difference between <code>responseEnd</code> and <code>startTime</code>.</p>
       <p>As shown in <a href="#fig2">Fig.2</a> and <a href="#fig3">Fig.3</a>, you are able to access a set of critical network timing <a href="https://w3c.github.io/resource-timing/#attributes">attributes</a> for each resource on the page.
       </p>
       <p>Each of these timestamps is in microseconds, which are provided by the <code>window.performance.now()</code> method in the <a href="http://www.w3.org/TR/hr-time/#sec-high-resolution-time">High Resolution Time specification</a>.</p>
