@@ -253,7 +253,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
 
         <section>
           <h2>Time Origin</h2>
-          <p>Time Origin determines the time value from which time is measured. For a dedicated worker or a document the origin time is the start of page navigation of that document, and for a shared worker the origin time is when the shared worker is created. For a more accurate definition, please check the spec's <a href="http://www.w3.org/TR/hr-time-2/#time-origin-1">details</a>.</p>
+          <p><dfn>Time Origin</dfn> determines the time value from which time is measured. For a dedicated worker or a document the origin time is the start of page navigation of that document, and for a shared worker the origin time is when the shared worker is created. For a more accurate definition, please check the spec's <a href="http://www.w3.org/TR/hr-time-2/#time-origin-1">details</a>.</p>
           <p>
           Suppose we have a shared worker <code>A</code> that was created 10ms after the start of navigation of the parent document. If we call <code>performance.now()</code> 5ms after the shared worker <code>A</code> was created in both the worker and the parent context, we should see the following values:</p>
           <pre class='example highlight'>
