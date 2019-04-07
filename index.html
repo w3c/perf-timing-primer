@@ -409,9 +409,9 @@ worker</span><span class="pun">.</span><span class="pln">port</span><span class=
         <section>
           <h3>performance.mark()</h3>
           <p>The <code>PerformanceMark</code> interface extends the <code>Performance</code> interface, and exposes marks to the users by a function named <code>mark()</code>. </p>
-          <p><code>mark()</code> allows web developers to make unique marks in their web application, and constomize the mark with a DOMString markName, f.ex. <code>window.performance.mark('before_click');</code></p>
-          <p>Taking advatage of the <code>Performance</code> interface, it's pretty easy to access the marks you have storaged. By calling <code>window.performance.getEntriesByType('mark')</code>, you will get a list of all the marks in your application. </p>
-          <p>When a mark is no longer of any value, you can get rid of it by <code>clearMarks('name')</code>, or even clear all the marks with <code>clearMarks()</code>.</p>
+          <p><code>mark()</code> allows web developers to make unique marks in their web application, and customize the mark with a DOMString markName. For example, to create a mark named <i>before_click</i>, call <code>window.performance.mark('before_click');</code></p>
+          <p>You can use the <code>Performance</code> interface to access the marks you have stored. By calling <code>window.performance.getEntriesByType('mark')</code>, you will get a list of all the marks in your application.</p>
+          <p>When marks are no longer of any value, you can delete them. You can delete all the marks by calling <code>clearMarks()</code> or delete a single mark, <i>mark_to_delete</i>, by calling <code>clearMarks('mark_to_delete')</code>.</p>
         </section>
         <section>
           <h3>performance.measure()</h3>
