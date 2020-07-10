@@ -41,6 +41,7 @@
           group: "webperf",
           wgPublicList: "public-web-perf",
           subjectPrefix: "[Primer]",
+          xref: ["hr-time"],
           postProcess: [removeLatestVersion]
       };
     </script>
@@ -232,7 +233,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
           The idea of High Resolution Time is to provide a monotonic, uniformly increasing timestamp suitable for interval measurements, which is made possible based on the following rules:
         </p>
         <ul>
-          <li>The time values returned when calling the <code>now()</code> method on <a>Performance</a> objects with the same <a>time origin</a> MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.</li>
+          <li>The time values returned when calling the <code>now()</code> method on {{Performance}} objects with the same <a>time origin</a> MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.</li>
           <li>The difference between any two chronologically recorded time values returned from the <code>now()</code> method MUST never be negative if the two time values have the same <a>time origin</a>.</li>
         </ul>
       </section>
@@ -245,7 +246,7 @@ if (window.console) window.console.log('Duration of task: ' + (Date.now() - mark
           One example is graphics. When calculating the frame rate of a script based animation, developers will need sub-millisecond resolution in order to determine if an animation is drawing at 60 FPS. Without sub-millisecond resolution, a developer can only determine if an animation is drawing at 58.8 FPS or 62.5 FPS.
         </p>
         <p>
-          The <a>DOMHighResTimeStamp</a> type and the <code>now()</code> method of the <a>Performance</a> interface resolve the issues summarized in this section by providing a time value in sub-millisecond resolution.
+          The {{DOMHighResTimeStamp}} type and the <code>now()</code> method of the {{Performance}} interface resolve the issues summarized in this section by providing a time value in sub-millisecond resolution.
         </p>
         </section>
 
